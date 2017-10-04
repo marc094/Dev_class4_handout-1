@@ -1,7 +1,4 @@
-﻿  j1App.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  j1Scene.cpp
-  j1Map.cpp
-  Motor2D.vcxproj -> C:\Users\polcc\Desktop\Dev_class4_handout\Debug\Motor 2D.exe
-  Motor2D.vcxproj -> C:\Users\polcc\Desktop\Dev_class4_handout\Debug\Motor 2D.pdb (Full PDB)
+﻿  j1Map.cpp
+c:\users\pol\documents\github\dev_class4_handout\motor2d\j1map.cpp(96): warning C4244: '=': conversion from 'float' to 'uint', possible loss of data
+  Motor2D.vcxproj -> C:\Users\Pol\Documents\GitHub\Dev_class4_handout\Debug\Motor 2D.exe
+  Motor2D.vcxproj -> C:\Users\Pol\Documents\GitHub\Dev_class4_handout\Debug\Motor 2D.pdb (Full PDB)

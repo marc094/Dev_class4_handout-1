@@ -5,6 +5,7 @@
 #include "j1Textures.h"
 #include "j1Map.h"
 #include <math.h>
+#include "p2DynArray.h"
 
 j1Map::j1Map() : j1Module(), map_loaded(false)
 {
@@ -33,6 +34,7 @@ void j1Map::Draw()
 
 	// TODO 6: Iterate all tilesets and draw all their 
 	// images in 0,0 (you should have only one tileset for now)
+	
 	
 }
 
@@ -68,6 +70,7 @@ bool j1Map::Load(const char* file_name)
 	{
 		// TODO 3: Create and call a private function to load and fill
 		// all your map data
+		Map = CallandFillMap(map_file);
 
 	}
 
@@ -86,12 +89,44 @@ bool j1Map::Load(const char* file_name)
 	return ret;
 }
 
-map CallandFillMap(pugi::xml_document map_doc)
-{
-	pugi::xml_node node;
+map j1Map::CallandFillMap(const pugi::xml_document& map_doc)
+{	
+
 	map ret;
+	pugi::xml_node node = map_doc.child("map");
+	ret.version = node.attribute("version").as_float();
 
-	node = map_doc.first_child();
+	p2SString orientation = node.attribute("orientation").as_string();
+	if (orientation == "orthogonal")
+	{
+		ret.orient = map::orthogonal;
+	}
+	else if (orientation == "isometric")
+	{
+		ret.orient = map::isometric;
+	}
 
+	p2SString renderorder = node.attribute("renderorder").as_string();
+	if (renderorder == "right-down")
+	{
+		ret.renderor = map::DOWNRIGHT;
+	}
+
+	ret.width = node.attribute("width").as_int();
+	ret.height = node.attribute("height").as_int();
+	ret.tilewidth = node.attribute("tilewidth").as_int();
+	ret.tileheight = node.attribute("tileheight").as_int();
+	ret.nextobjectid = node.attribute("nextobjectid").as_int();
+
+	pugi::xml_node tileset = node.child("tileset");
+
+	ret.tileset.firstgid = tileset.attribute("firstgid").as_int();
+	ret.tileset.name = tileset.attribute("name").as_string();
+	ret.tileset.tilewidth = tileset.attribute("tilewidth").as_int();
+	ret.tileset.tileheight = tileset.attribute("tileheight").as_int();
+	ret.tileset.spacing = tileset.attribute("spacing").as_int();
+	ret.tileset.margin = tileset.attribute("margin").as_int();
+
+	return ret;
 }
 

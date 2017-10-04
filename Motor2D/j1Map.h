@@ -5,17 +5,24 @@
 #include "p2List.h"
 #include "p2Point.h"
 #include "j1Module.h"
+#include "p2DynArray.h"
 
 // TODO 2: Create a struct to hold information for a TileSet
 // Ignore Terrain Types and Tile Types for now, but we want the image!
 // ----------------------------------------------------
 struct tile {
 	uint firstgid;
-	char* name;
+	p2SString name;
 	uint tilewidth;
 	uint tileheight;
 	uint spacing;
 	uint margin;
+
+	struct image {
+		char* name;
+		uint width;
+		uint height;
+	};
 };
 
 // TODO 1: Create a struct needed to hold the information to Map node
@@ -25,7 +32,7 @@ struct map {
 	{
 		orthogonal = 1,
 		isometric
-	};
+	} orient;
 	enum renderorder
 	{
 		RIGHT = 1,
@@ -36,12 +43,13 @@ struct map {
 		LEFTDOWN,
 		DOWN,
 		DOWNRIGHT
-	};
+	} renderor;
 	uint width;
 	uint height;
 	uint tilewidth;
 	uint tileheight;
 	uint nextobjectid;
+	tile tileset;
 };
 
 // ----------------------------------------------------
@@ -67,7 +75,7 @@ public:
 	bool Load(const char* path);
 
 private:
-	map CallandFillMap();
+	map CallandFillMap(const pugi::xml_document &map_doc);
 
 public:
 

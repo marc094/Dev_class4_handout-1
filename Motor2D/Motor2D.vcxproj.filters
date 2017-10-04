@@ -112,7 +112,7 @@
     <None Include="..\..\My map2.tmx">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </None>
-    <None Include="..\..\..\..\Desktop\Dev_class4_handout\Game\maps\hello2.tmx">
+    <None Include="..\Game\maps\hello2.tmx">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </None>
   </ItemGroup>
