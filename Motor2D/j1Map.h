@@ -67,12 +67,12 @@ public:
 	bool Load(const char* path);
 
 private:
-
+	map CallandFillMap();
 
 public:
 
 	// TODO 1: Add your struct for map info as public for now
-	map Map{};
+	map Map;
 
 private:
 

@@ -33,7 +33,7 @@ void j1Map::Draw()
 
 	// TODO 6: Iterate all tilesets and draw all their 
 	// images in 0,0 (you should have only one tileset for now)
-
+	
 }
 
 // Called before quitting
@@ -68,6 +68,7 @@ bool j1Map::Load(const char* file_name)
 	{
 		// TODO 3: Create and call a private function to load and fill
 		// all your map data
+
 	}
 
 	// TODO 4: Create and call a private function to load a tileset
@@ -83,5 +84,14 @@ bool j1Map::Load(const char* file_name)
 	map_loaded = ret;
 
 	return ret;
+}
+
+map CallandFillMap(pugi::xml_document map_doc)
+{
+	pugi::xml_node node;
+	map ret;
+
+	node = map_doc.first_child();
+
 }
 
