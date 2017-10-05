@@ -33,9 +33,9 @@ void j1Map::Draw()
 		return;
 
 	// TODO 6: Iterate all tilesets and draw all their 
-	// images in 0,0 (you should have only one tileset for now)
-	
-	
+// images in 0,0 (you should have only one tileset for now)
+
+
 }
 
 // Called before quitting
@@ -60,25 +60,25 @@ bool j1Map::Load(const char* file_name)
 
 	pugi::xml_parse_result result = map_file.load_file(tmp.GetString());
 
-	if(result == NULL)
+	if (result == NULL)
 	{
 		LOG("Could not load map xml file %s. pugi error: %s", file_name, result.description());
 		ret = false;
 	}
 
-	if(ret == true)
+	if (ret == true)
 	{
 		// TODO 3: Create and call a private function to load and fill
 		// all your map data
-		Map = CallandFillMap(map_file);
+		map = CallandFillMap(map_file);
 
 	}
 
 	// TODO 4: Create and call a private function to load a tileset
 	// remember to support more any number of tilesets!
-	
 
-	if(ret == true)
+
+	if (ret == true)
 	{
 		// TODO 5: LOG all the data loaded
 		// iterate all tilesets and LOG everything
@@ -89,27 +89,29 @@ bool j1Map::Load(const char* file_name)
 	return ret;
 }
 
-map j1Map::CallandFillMap(const pugi::xml_document& map_doc)
-{	
+Map j1Map::CallandFillMap(const pugi::xml_document& map_doc)
+{
 
-	map ret;
+	Map ret;
 	pugi::xml_node node = map_doc.child("map");
-	ret.version = node.attribute("version").as_float();
+	ret.version = node.attribute("version").as_string();
 
-	p2SString orientation = node.attribute("orientation").as_string();
+	uint number_layers, number_tilesets;
+
+	const char* orientation = node.attribute("orientation").as_string();
 	if (orientation == "orthogonal")
 	{
-		ret.orient = map::orthogonal;
+		ret.orient = Map::orthogonal;
 	}
 	else if (orientation == "isometric")
 	{
-		ret.orient = map::isometric;
+		ret.orient = Map::isometric;
 	}
 
-	p2SString renderorder = node.attribute("renderorder").as_string();
+	const char* renderorder = node.attribute("renderorder").as_string();
 	if (renderorder == "right-down")
 	{
-		ret.renderor = map::DOWNRIGHT;
+		ret.renderor = Map::DOWNRIGHT;
 	}
 
 	ret.width = node.attribute("width").as_int();
@@ -118,14 +120,61 @@ map j1Map::CallandFillMap(const pugi::xml_document& map_doc)
 	ret.tileheight = node.attribute("tileheight").as_int();
 	ret.nextobjectid = node.attribute("nextobjectid").as_int();
 
+
+	for (pugi::xml_node child : node.children()) {
+		if (child.name() == "layer") {
+			number_layers++;
+
+		}
+		else if (child.name() == "tilset") {
+			number_tilesets++;
+		}
+	}
+
+	map.tilesets = (Tileset*)malloc(number_tilesets * sizeof(Tileset));
+
 	pugi::xml_node tileset = node.child("tileset");
 
-	ret.tileset.firstgid = tileset.attribute("firstgid").as_int();
-	ret.tileset.name = tileset.attribute("name").as_string();
-	ret.tileset.tilewidth = tileset.attribute("tilewidth").as_int();
-	ret.tileset.tileheight = tileset.attribute("tileheight").as_int();
-	ret.tileset.spacing = tileset.attribute("spacing").as_int();
-	ret.tileset.margin = tileset.attribute("margin").as_int();
+	for (uint i = 0; i < number_tilesets && tileset.root() == NULL; i++) {
+
+		ret.tilesets[i].firstgid = tileset.attribute("firstgid").as_int();
+		ret.tilesets[i].name = tileset.attribute("name").as_string();
+		ret.tilesets[i].tilewidth = tileset.attribute("tilewidth").as_int();
+		ret.tilesets[i].tileheight = tileset.attribute("tileheight").as_int();
+		ret.tilesets[i].spacing = tileset.attribute("spacing").as_int();
+		ret.tilesets[i].margin = tileset.attribute("margin").as_int();
+
+		pugi::xml_node image = tileset.child("image");
+
+		ret.tilesets[i].image = {
+			image.attribute("source").as_string(),
+			image.attribute("width").as_uint(),
+			image.attribute("height").as_uint()
+		};
+
+		tileset = tileset.next_sibling();
+	}
+
+	map.layers = (Layer*)malloc(number_layers * sizeof(Layer));
+
+	//for (uint i = 0; i < number_layers; i++) { //needs finishing
+		pugi::xml_node layer = node.child("layer");
+
+		ret.tilesets[i].firstgid = tileset.attribute("firstgid").as_int();
+		ret.tilesets[i].name = tileset.attribute("name").as_string();
+		ret.tilesets[i].tilewidth = tileset.attribute("tilewidth").as_int();
+		ret.tilesets[i].tileheight = tileset.attribute("tileheight").as_int();
+		ret.tilesets[i].spacing = tileset.attribute("spacing").as_int();
+		ret.tilesets[i].margin = tileset.attribute("margin").as_int();
+
+		pugi::xml_node image = tileset.child("image");
+
+		ret.tilesets[i].image = {
+			image.attribute("source").as_string(),
+			image.attribute("width").as_uint(),
+			image.attribute("height").as_uint()
+		};
+	}
 
 	return ret;
 }

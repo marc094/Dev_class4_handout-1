@@ -10,24 +10,29 @@
 // TODO 2: Create a struct to hold information for a TileSet
 // Ignore Terrain Types and Tile Types for now, but we want the image!
 // ----------------------------------------------------
-struct tile {
+struct Tileset {
 	uint firstgid;
-	p2SString name;
+	const char* name;
 	uint tilewidth;
 	uint tileheight;
 	uint spacing;
 	uint margin;
 
-	struct image {
-		char* name;
+	struct Image {
+		const char* name;
 		uint width;
 		uint height;
-	};
+	} image;
+};
+
+struct Layer {
+	uint* tiles;
+	const char* name;
 };
 
 // TODO 1: Create a struct needed to hold the information to Map node
-struct map {
-	uint version;
+struct Map {
+	const char* version;
 	enum orientation
 	{
 		orthogonal = 1,
@@ -49,7 +54,9 @@ struct map {
 	uint tilewidth;
 	uint tileheight;
 	uint nextobjectid;
-	tile tileset;
+	Tileset* tilesets;
+	Layer* layers;
+
 };
 
 // ----------------------------------------------------
@@ -75,12 +82,12 @@ public:
 	bool Load(const char* path);
 
 private:
-	map CallandFillMap(const pugi::xml_document &map_doc);
+	Map CallandFillMap(const pugi::xml_document &map_doc);
 
 public:
 
 	// TODO 1: Add your struct for map info as public for now
-	map Map;
+	Map map;
 
 private:
 
